@@ -39,6 +39,9 @@ class XingAPI:
         result = api.GetResult()
         return result
 
+    def CSPAQ12200_예수금조회(self):
+        pass
+
 
 if __name__ == "__main__":
     API = XingAPI()

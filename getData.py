@@ -132,4 +132,4 @@ class T1514(DataParent):
                    '시가', '고가', '저가', '거래대금2', '상한', '하한', '종목수', '기관순매수', '업종코드', '거래비중', '업종배당수익률']
 
         return DataFrame(data=self.result, columns=columns)
-        
+
