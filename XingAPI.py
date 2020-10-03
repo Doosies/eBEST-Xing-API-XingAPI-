@@ -17,4 +17,7 @@ class XingAPI:
         result = stockAPI.T1514().GetResult()
         return result
 
+    def CSPAQ12200_예수금조회(self):
+        pass
+
 

@@ -145,9 +145,72 @@ class CSPAQ12200(DataParent):
     def OnReceiveData(self):
         nCount = self.query.GetBlockCount(self.OUTBLOCK1)
         for i in range(nCount):
-            일자 = self.query.GetFieldData(self.OUTBLOCK1, "date", i).strip()
-
-            lst = [일자, ]
+            레코드갯수 = self.query.GetFieldData(self.OUTBLOCK2,"RecCnt",i).strip()
+            지점명 = self.query.GetFieldData(self.OUTBLOCK2,"BrnNm",i).strip()
+            계좌명 = self.query.GetFieldData(self.OUTBLOCK2,"AcntNm",i).strip()
+            현금주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"MnyOrdAbleAmt",i).strip()
+            출금가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"MnyoutAbleAmt",i).strip()
+            거래소금액 = self.query.GetFieldData(self.OUTBLOCK2,"SeOrdAbleAmt",i).strip()
+            코스닥금액 = self.query.GetFieldData(self.OUTBLOCK2,"KdqOrdAbleAmt",i).strip()
+            잔고평가금액 = self.query.GetFieldData(self.OUTBLOCK2,"BalEvalAmt",i).strip()
+            미수금액 = self.query.GetFieldData(self.OUTBLOCK2,"RcvblAmt",i).strip()
+            예탁자산총액 = self.query.GetFieldData(self.OUTBLOCK2,"DpsastTotamt",i).strip()
+            손익율 = self.query.GetFieldData(self.OUTBLOCK2,"PnlRat",i).strip()
+            투자원금 = self.query.GetFieldData(self.OUTBLOCK2,"InvstOrgAmt",i).strip()
+            투자손익금액 = self.query.GetFieldData(self.OUTBLOCK2,"InvstPlAmt",i).strip()
+            신용담보주문금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdtPldgOrdAmt",i).strip()
+            예수금 = self.query.GetFieldData(self.OUTBLOCK2,"Dps",i).strip()
+            대용금액 = self.query.GetFieldData(self.OUTBLOCK2,"SubstAmt",i).strip()
+            D1예수금 = self.query.GetFieldData(self.OUTBLOCK2,"D1Dps",i).strip()
+            D2예수금 = self.query.GetFieldData(self.OUTBLOCK2,"D2Dps",i).strip()
+            현금미수금액 = self.query.GetFieldData(self.OUTBLOCK2,"MnyrclAmt",i).strip()
+            증거금현금 = self.query.GetFieldData(self.OUTBLOCK2,"MgnMny",i).strip()
+            증거금대용 = self.query.GetFieldData(self.OUTBLOCK2,"MgnSubst",i).strip()
+            수표금액 = self.query.GetFieldData(self.OUTBLOCK2,"ChckAmt",i).strip()
+            대용주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"SubstOrdAbleAmt",i).strip()
+            증거금률100퍼센트주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"MgnRat100pctOrdAbleAmt[",i).strip()
+            증거금률35주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"MgnRat35ordAbleAmt",i).strip()
+            증거금률50주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"MgnRat50ordAbleAmt",i).strip()
+            전일매도정산금액 = self.query.GetFieldData(self.OUTBLOCK2,"PrdaySellAdjstAmt",i).strip()
+            전일매수정산금액 = self.query.GetFieldData(self.OUTBLOCK2,"PrdayBuyAdjstAmt",i).strip()
+            금일매도정산금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdaySellAdjstAmt",i).strip()
+            금일매수정산금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdayBuyAdjstAmt",i).strip()
+            D1연체변제소요금액 = self.query.GetFieldData(self.OUTBLOCK2,"D1ovdRepayRqrdAmt",i).strip()
+            D2연체변제소요금액 = self.query.GetFieldData(self.OUTBLOCK2,"D2ovdRepayRqrdAmt",i).strip()
+            D1추정인출가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"D1PrsmptWthdwAbleAmt[",i).strip()
+            D2추정인출가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"D2PrsmptWthdwAbleAmt[",i).strip()
+            예탁담보대출금액 = self.query.GetFieldData(self.OUTBLOCK2,"DpspdgLoanAmt",i).strip()
+            신용설정보증금 = self.query.GetFieldData(self.OUTBLOCK2,"Imreq",i).strip()
+            융자금액 = self.query.GetFieldData(self.OUTBLOCK2,"MloanAmt",i).strip()
+            변경후담보비율 = self.query.GetFieldData(self.OUTBLOCK2,"ChgAfPldgRat",i).strip()
+            원담보금액 = self.query.GetFieldData(self.OUTBLOCK2,"OrgPldgAmt",i).strip()
+            부담보금액 = self.query.GetFieldData(self.OUTBLOCK2,"SubPldgAmt",i).strip()
+            소요담보금액 = self.query.GetFieldData(self.OUTBLOCK2,"RqrdPldgAmt",i).strip()
+            원담보부족금액 = self.query.GetFieldData(self.OUTBLOCK2,"OrgPdlckAmt",i).strip()
+            담보부족금액 = self.query.GetFieldData(self.OUTBLOCK2,"PdlckAmt",i).strip()
+            추가담보현금 = self.query.GetFieldData(self.OUTBLOCK2,"AddPldgMny",i).strip()
+            D1주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"D1OrdAbleAmt",i).strip()
+            신용이자미납금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdtIntdltAmt",i).strip()
+            기타대여금액 = self.query.GetFieldData(self.OUTBLOCK2,"EtclndAmt",i).strip()
+            익일추정반대매매금액 = self.query.GetFieldData(self.OUTBLOCK2,"NtdayPrsmptCvrgAmt",i).strip()
+            원담보합계금액 = self.query.GetFieldData(self.OUTBLOCK2,"OrgPldgSumAmt",i).strip()
+            신용주문가능금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdtOrdAbleAmt",i).strip()
+            부담보합계금액 = self.query.GetFieldData(self.OUTBLOCK2,"SubPldgSumAmt",i).strip()
+            신용담보금현금 = self.query.GetFieldData(self.OUTBLOCK2,"CrdtPldgAmtMny",i).strip()
+            신용담보대용금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdtPldgSubstAmt",i).strip()
+            추가신용담보현금 = self.query.GetFieldData(self.OUTBLOCK2,"AddCrdtPldgMny",i).strip()
+            신용담보재사용금액 = self.query.GetFieldData(self.OUTBLOCK2,"CrdtPldgRuseAmt",i).strip()
+            추가신용담보대용 = self.query.GetFieldData(self.OUTBLOCK2,"AddCrdtPldgSubst",i).strip()
+            매도대금담보대출금액 = self.query.GetFieldData(self.OUTBLOCK2,"CslLoanAmtdt1",i).strip()
+            처분제한금액 = self.query.GetFieldData(self.OUTBLOCK2,"DpslRestrcAmt",i).strip()
+            lst = [레코드갯수,지점명,계좌명,현금주문가능금액,출금가능금액,거래소금액,코스닥금액,잔고평가금액,미수금액,
+            예탁자산총액,손익율,투자원금,투자손익금액,신용담보주문금액,예수금,대용금액,D1예수금,D2예수금,현금미수금액,
+            증거금현금,증거금대용,수표금액,대용주문가능금액,증거금률100퍼센트주문가능금액,증거금률35주문가능금액,
+            증거금률50주문가능금액,전일매도정산금액,전일매수정산금액,금일매도정산금액,금일매수정산금액,D1연체변제소요금액,
+            D2연체변제소요금액,D1추정인출가능금액,D2추정인출가능금액,예탁담보대출금액,신용설정보증금,융자금액,변경후담보비율,
+            원담보금액,부담보금액,소요담보금액,원담보부족금액,담보부족금액,추가담보현금,D1주문가능금액,신용이자미납금액,기타대여금액,
+            익일추정반대매매금액,원담보합계금액,신용주문가능금액,부담보합계금액,신용담보금현금,신용담보대용금액,추가신용담보현금,
+            신용담보재사용금액,추가신용담보대용,매도대금담보대출금액,처분제한금액]
 
             self.result.append(lst)
 
