@@ -148,8 +148,24 @@ class T0424_주식잔고2(DataParent):
         self.query.Request(0)
         Waiting()
 
-    def OnReceiveData(self):
-        pass
-    
+    def OnReceiveData(self,szTrCode):
+        
+        nCount = self.query.GetBlockCount(self.OUTBLOCK1)
+        for i in range(nCount):
+            추정순자산 = self.query.GetFieldData(self.OUTBLOCK1,"sunamt",i).strip()
+            실현손익 = self.query.GetFieldData(self.OUTBLOCK1,"dtsunik",i).strip()
+            매입금액 = self.query.GetFieldData(self.OUTBLOCK1,"mamt",i).strip()
+            추정D2예수금 = self.query.GetFieldData(self.OUTBLOCK1,"sunamt1",i).strip()
+            CTS_종목번호 = self.query.GetFieldData(self.OUTBLOCK1,"cts_expcode",i).strip()
+            평가금액 = self.query.GetFieldData(self.OUTBLOCK1,"tappamt",i).strip()
+            평가손익 = self.query.GetFieldData(self.OUTBLOCK1,"tdtsunik",i).strip()
+
+            lst = [추정순자산,실현손익,매입금액,추정D2예수금,CTS_종목번호,평가금액,평가손익]
+
+            self.result.append(lst)
+
+        XAQueryEvents.상태 = False
+
     def GetResult(self):
-        pass
+        columns = ["추정순자산","실현손익","매입금액","추정D2예수금","CTS_종목번호","평가금액","평가손익"]
+        return DataFrame(data=self.result, columns=columns)

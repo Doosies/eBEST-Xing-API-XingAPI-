@@ -41,7 +41,9 @@ class XingAPI:
 
     def CSPAQ12200_예수금조회(self):
         pass
-
+    
+    def t0424_주식잔고2(self):
+        pass
 
 if __name__ == "__main__":
     API = XingAPI()
