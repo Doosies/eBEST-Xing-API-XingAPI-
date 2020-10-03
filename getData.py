@@ -69,7 +69,7 @@ class DataParent:
 # 업종 기간별 추이
 class T1514(DataParent):
     '''
-    업종기간별추이
+    업종기간별추이!!!
     '''
 
     def __init__(self):
