@@ -57,4 +57,4 @@ class Account:
 
     def Logout(self):
         self.session.Logout()
-        self.session.DisconnectServer()
+        self.session.DisconnectServer()#|@
