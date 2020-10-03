@@ -42,11 +42,19 @@ class Account:
         # 연결이 된다면 로그인을 진행함.
         self.session.Login(id, pwd, cert, 0, False)
 
+
+
+       
+
+    def Logout(self):
+        self.session.Logout()
+        self.session.DisconnectServer()
+
+    def getAccount(self):
         # 서버에서 데이터를 송신할 때까지 대기
         while XASessionEvents.상태 == False:
             pythoncom.PumpWaitingMessages()
-
-
+            
         account_cnt = self.session.GetAccountListCount()
         # 계좌정보를 account에 넣음
         for i in range(account_cnt):
@@ -55,6 +63,4 @@ class Account:
         for number in self.account:
             print(number)
 
-    def Logout(self):
-        self.session.Logout()
-        self.session.DisconnectServer()
+        return self.account
