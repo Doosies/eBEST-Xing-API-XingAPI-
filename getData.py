@@ -134,9 +134,19 @@ class T1514(DataParent):
         return DataFrame(data=self.result, columns=columns)
 
 class T0424_주식잔고2(DataParent):
+    '''
+    주식잔고2!!!
+    '''
 
-    def Request(self):
-        pass
+    def Request(self, 계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부):
+        self.query.SetFieldData(self.INBLOCK, "accno", 0, 계좌번호)
+        self.query.SetFieldData(self.INBLOCK, "passwd", 0, 비밀번호)
+        self.query.SetFieldData(self.INBLOCK, "prcgb", 0, 단가구분)
+        self.query.SetFieldData(self.INBLOCK, "chegb", 0, 체결구분)
+        self.query.SetFieldData(self.INBLOCK, "dangb", 0, 단일가구분)
+        self.query.SetFieldData(self.INBLOCK, "charge", 0, 제비용포함여부)
+        self.query.Request(0)
+        Waiting()
 
     def OnReceiveData(self):
         pass
