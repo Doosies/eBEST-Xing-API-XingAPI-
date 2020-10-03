@@ -42,7 +42,6 @@ def Waiting():
 # 다른 데이터를 받는 함수들에서 공통적으로 초기화 해줘야 할 부분을 추상클래스로 빼버림
 class DataParent:
     def __init__(self,kind):
-        print("yeah")
         self.RESDIR = 'C:\\eBEST\\xingAPI\\Res\\'
         self.MYNAME = kind
         self.RESFILE = self.RESDIR + self.MYNAME + ".res"
@@ -58,12 +57,20 @@ class DataParent:
         self.result = []
 
     def Request(self):
+        """데이터 요청
+        성공시 OnReceiveData() 실행
+        """
         pass
 
     def OnReceiveData(self):
+        """데이터 수신
+        데이터가 수신되면 실행되는 함수
+        """
         pass
 
     def GetResult(self):
+        """결과값을 리턴
+        """
         pass
 
 # 업종 기간별 추이
@@ -83,7 +90,8 @@ class T1514(DataParent):
         self.query.SetFieldData(self.INBLOCK, "cnt", 0, 조회건수)
         self.query.SetFieldData(self.INBLOCK, "rate_gbn", 0, 비중구분)
         self.query.Request(0)
-
+        Waiting()
+        
     def OnReceiveData(self,szTrCode):
         nCount = self.query.GetBlockCount(self.OUTBLOCK1)
         for i in range(nCount):
@@ -120,38 +128,8 @@ class T1514(DataParent):
         XAQueryEvents.상태 = False
 
     def GetResult(self):
-        Waiting()
         columns = ['일자', '지수', '전일대비구분', '전일대비', '등락율', '거래량', '거래증가율', '거래대금1', '상승', '보합', '하락', '상승종목비율', '외인순매수',
                    '시가', '고가', '저가', '거래대금2', '상한', '하한', '종목수', '기관순매수', '업종코드', '거래비중', '업종배당수익률']
 
         return DataFrame(data=self.result, columns=columns)
-
-# 예수금상세현황요청, 주문가능금액, 총평가 조회
-class CSPAQ12200(DataParent):
-    '''
-    예수금상세현황요청, 주문가능금액, 총평가조회
-    '''
-    def __init__(self):
-        super().__init__('CSPAQ12200')
-
-    def Request(self, 레코드갯수, 관리지점번호, 계좌번호, 비밀번호, 잔고생성구분):
-        self.query.SetFieldData(self.INBLOCK, "RecCn", 0, 레코드갯수)
-        self.query.SetFieldData(self.INBLOCK, "MgmtBrnNo", 0, 관리지점번호)
-        self.query.SetFieldData(self.INBLOCK, "AcntNo", 0, 계좌번호)
-        self.query.SetFieldData(self.INBLOCK, "Pwd", 0, 비밀번호)
-        self.query.SetFieldData(self.INBLOCK, "BalCreTp", 0, 잔고생성구분)
-        self.query.Request(0)
-
-    def OnReceiveData(self):
-        nCount = self.query.GetBlockCount(self.OUTBLOCK1)
-        for i in range(nCount):
-            일자 = self.query.GetFieldData(self.OUTBLOCK1, "date", i).strip()
-
-            lst = [일자, ]
-
-            self.result.append(lst)
-
-        XAQueryEvents.상태 = False
-
-    def GetResult(self):
-        pass
+        
