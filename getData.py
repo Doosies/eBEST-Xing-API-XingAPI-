@@ -133,3 +133,13 @@ class T1514(DataParent):
 
         return DataFrame(data=self.result, columns=columns)
 
+class T0424_주식잔고2(DataParent):
+
+    def Request(self):
+        pass
+
+    def OnReceiveData(self):
+        pass
+    
+    def GetResult(self):
+        pass
