@@ -1,2 +1,2 @@
 # XingApi-api-
-공부공부
+xing api 시작.

@@ -48,6 +48,7 @@ class DataParent:
         self.INBLOCK = "%sInBlock" % self.MYNAME
         self.OUTBLOCK = "%sOutBlock" % self.MYNAME
         self.OUTBLOCK1 = "%sOutBlock1" % self.MYNAME
+        self.OUTBLOCK2 = "%sOutBlock2" % self.MYNAME
 
         self.query = win32com.client.DispatchWithEvents("XA_DataSet.XAQuery", XAQueryEvents)
         self.query.ResFileName = self.RESFILE
@@ -133,3 +134,43 @@ class T1514(DataParent):
 
         return DataFrame(data=self.result, columns=columns)
 
+class T0424_주식잔고2(DataParent):
+    '''
+    주식잔고2!!!
+    '''
+    def __init__(self): 
+        super().__init__('t0424')
+
+    def Request(self, 계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호):
+        self.query.SetFieldData(self.INBLOCK, "accno", 0, 계좌번호)
+        self.query.SetFieldData(self.INBLOCK, "passwd", 0, 비밀번호)
+        self.query.SetFieldData(self.INBLOCK, "prcgb", 0, 단가구분)
+        self.query.SetFieldData(self.INBLOCK, "chegb", 0, 체결구분)
+        self.query.SetFieldData(self.INBLOCK, "dangb", 0, 단일가구분)
+        self.query.SetFieldData(self.INBLOCK, "charge", 0, 제비용포함여부)
+        self.query.SetFieldData(self.INBLOCK, "cts_expcode", 0, CTS_종목번호)
+        self.query.Request(0)
+        Waiting()
+
+    def OnReceiveData(self,szTrCode):
+        
+        nCount = self.query.GetBlockCount(self.OUTBLOCK)
+        print(nCount)
+        for i in range(nCount):
+            추정순자산 = self.query.GetFieldData(self.OUTBLOCK,"sunamt",i).strip()
+            실현손익 = self.query.GetFieldData(self.OUTBLOCK,"dtsunik",i).strip()
+            매입금액 = self.query.GetFieldData(self.OUTBLOCK,"mamt",i).strip()
+            추정D2예수금 = self.query.GetFieldData(self.OUTBLOCK,"sunamt1",i).strip()
+            CTS_종목번호 = self.query.GetFieldData(self.OUTBLOCK,"cts_expcode",i).strip()
+            평가금액 = self.query.GetFieldData(self.OUTBLOCK,"tappamt",i).strip()
+            평가손익 = self.query.GetFieldData(self.OUTBLOCK,"tdtsunik",i).strip()
+
+            lst = [추정순자산,실현손익,매입금액,추정D2예수금,CTS_종목번호,평가금액,평가손익]
+
+            self.result.append(lst)
+
+        XAQueryEvents.상태 = False
+
+    def GetResult(self):
+        columns = ["추정순자산","실현손익","매입금액","추정D2예수금","CTS_종목번호","평가금액","평가손익"]
+        return DataFrame(data=self.result, columns=columns)
