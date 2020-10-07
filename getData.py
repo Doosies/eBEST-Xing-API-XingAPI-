@@ -28,16 +28,17 @@ class XAQueryEvents(object):
         if self.parent != None:
             self.parent.OnReceiveData(szTrCode)
 
-        XAQueryEvents.상태 = True
+        self.상태 = True
 
     def OnReceiveMessage(self, systemError, messageCode, message):
         # print("OnReceiveMessage : ", systemError, messageCode, message)
         pass
 
-# 서버에서 데이터가 올 때 까지 대기하는 함수
-def Waiting():
-    while XAQueryEvents.상태 == False:
-        pythoncom.PumpWaitingMessages()
+
+# # 서버에서 데이터가 올 때 까지 대기하는 함수
+# def Waiting():
+#     while XAQueryEvents.waitReceive() == False:
+#         pythoncom.PumpWaitingMessages()
 
 # 다른 데이터를 받는 함수들에서 공통적으로 초기화 해줘야 할 부분을 추상클래스로 빼버림
 class DataParent:
@@ -54,7 +55,7 @@ class DataParent:
         self.query.ResFileName = self.RESFILE
         self.query.set_params(parent=self)
 
-
+        self.query_events = XAQueryEvents()
         self.result = []
 
     def Request(self):
@@ -91,7 +92,10 @@ class T1514(DataParent):
         self.query.SetFieldData(self.INBLOCK, "cnt", 0, 조회건수)
         self.query.SetFieldData(self.INBLOCK, "rate_gbn", 0, 비중구분)
         self.query.Request(0)
-        Waiting()
+
+        while self.query_events.상태 == False:
+            print(self.query_events.상태)
+            pythoncom.PumpWaitingMessages()
         
     def OnReceiveData(self,szTrCode):
         nCount = self.query.GetBlockCount(self.OUTBLOCK1)
@@ -118,6 +122,7 @@ class T1514(DataParent):
             종목수 = int(self.query.GetFieldData(self.OUTBLOCK1, "totjo", i).strip())
             기관순매수 = int(self.query.GetFieldData(self.OUTBLOCK1, "orgsvolume", i).strip())
             업종코드 = self.query.GetFieldData(self.OUTBLOCK1, "upcode", i).strip()
+            
             거래비중 = float(self.query.GetFieldData(self.OUTBLOCK1, "rate", i).strip())
             업종배당수익률 = float(self.query.GetFieldData(self.OUTBLOCK1, "divrate", i).strip())
 
@@ -126,7 +131,7 @@ class T1514(DataParent):
 
             self.result.append(lst)
 
-        XAQueryEvents.상태 = False
+        self.query_events.상태 = False
 
     def GetResult(self):
         columns = ['일자', '지수', '전일대비구분', '전일대비', '등락율', '거래량', '거래증가율', '거래대금1', '상승', '보합', '하락', '상승종목비율', '외인순매수',
@@ -173,4 +178,61 @@ class T0424_주식잔고2(DataParent):
 
     def GetResult(self):
         columns = ["추정순자산","실현손익","매입금액","추정D2예수금","CTS_종목번호","평가금액","평가손익"]
+        return DataFrame(data=self.result, columns=columns)
+
+class T8412_주식차트N분(DataParent):
+    '''
+    주식차트 조회
+    '''
+    def __init__(self): 
+        super().__init__('t8412')
+
+    def Request(self, 단축코드, 단위, 요청건수, cts_date):
+        if cts_date == '':
+            self.query.SetFieldData(self.INBLOCK, "shcode", 0, 단축코드)
+            self.query.SetFieldData(self.INBLOCK, "ncnt", 0, 단위)
+            self.query.SetFieldData(self.INBLOCK, "qrycnt", 0, 요청건수)
+            self.query.SetFieldData(self.INBLOCK, "nday", 0, 0)
+            self.query.SetFieldData(self.INBLOCK, "edate", 0, '99999999')
+            self.query.SetFieldData(self.INBLOCK, "cts_date", 0, cts_date)
+            # self.query.SetFieldData(self.INBLOCK, "cts_time", 0, 연속시간)
+            self.query.SetFieldData(self.INBLOCK, "comp_yn", 0, 'Y')
+            self.query.Request(0)
+        else:
+            self.SetFieldData(self.INBLOCK, "cts_date", 0, self.CTS_DATE)
+            err_code = self.Request(True) # 연속조회인경우만 True
+
+            if err_code < 0:
+                print("error... {0}".format(err_code))
+
+
+
+        # Waiting()
+
+    def OnReceiveData(self,szTrCode):
+        nOrgSize = self.query.Decompress("t8412OutBlock1")
+        if nOrgSize > 0:
+            nCount = self.query.GetBlockCount(self.OUTBLOCK1)
+            print(nCount)
+            for i in range(nCount):
+                날짜 = self.query.GetFieldData(self.OUTBLOCK1,"date",i).strip()
+                시간 = self.query.GetFieldData(self.OUTBLOCK1,"time",i).strip()
+                시가 = self.query.GetFieldData(self.OUTBLOCK1,"open",i).strip()
+                고가 = self.query.GetFieldData(self.OUTBLOCK1,"high",i).strip()
+                저가 = self.query.GetFieldData(self.OUTBLOCK1,"low",i).strip()
+                종가 = self.query.GetFieldData(self.OUTBLOCK1,"close",i).strip()
+                거래량 = self.query.GetFieldData(self.OUTBLOCK1,"jdiff_vol",i).strip()
+                거래대금 = self.query.GetFieldData(self.OUTBLOCK1,"value",i).strip()
+                수정구분 = self.query.GetFieldData(self.OUTBLOCK1,"jongchk",i).strip()
+                수정비율 = self.query.GetFieldData(self.OUTBLOCK1,"rate",i).strip()
+                종가등락구분 = self.query.GetFieldData(self.OUTBLOCK1,"sign",i).strip()
+
+                lst = [날짜,시간,시가,고가,저가,종가,거래량,거래대금,수정구분,수정비율,종가등락구분]
+
+                self.result.append(lst)
+        self.CTS_DATE = self.query.GetFieldData(self.OUTBLOCK,"date",0).strip()
+        XAQueryEvents.상태 = False
+
+    def GetResult(self):
+        columns = ["날짜","시간","시가","고가","저가","종가","거래량","거래대금","수정구분","수정비율","종가등락구분"]
         return DataFrame(data=self.result, columns=columns)
