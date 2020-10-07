@@ -4,7 +4,7 @@ import os
 import sys
 import inspect
 
-import sqlite3
+# import sqlite3
 
 import pandas as pd
 from pandas import DataFrame, Series, Panel

@@ -5,7 +5,7 @@ class XASessionEvents:
     상태 = False
 
     def OnLogin(self, code, msg):
-        print("OnLogin : ", code, msg)
+        # print("OnLogin : ", code, msg)
         XASessionEvents.상태 = True
 
     def OnLogout(self):
@@ -60,7 +60,7 @@ class Account:
         for i in range(account_cnt):
             self.account.append(self.session.GetAccountList(i))
 
-        for number in self.account:
-            print(number)
-
+        # for number in self.account:
+        #     print(number)
+        
         return self.account
