@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 # 서버에서 해당 이벤트를 발생시키는 함수
-class XAQueryEvents(object):
+class XAQueryEvents:
     상태 = False
 
     def __init__(self):
@@ -28,7 +28,7 @@ class XAQueryEvents(object):
         if self.parent != None:
             self.parent.OnReceiveData(szTrCode)
 
-        self.상태 = True
+        XAQueryEvents.상태 = True
 
     def OnReceiveMessage(self, systemError, messageCode, message):
         # print("OnReceiveMessage : ", systemError, messageCode, message)
@@ -50,12 +50,12 @@ class DataParent:
         self.OUTBLOCK = "%sOutBlock" % self.MYNAME
         self.OUTBLOCK1 = "%sOutBlock1" % self.MYNAME
         self.OUTBLOCK2 = "%sOutBlock2" % self.MYNAME
-
+        
+        # query_events = XAQueryEvents
         self.query = win32com.client.DispatchWithEvents("XA_DataSet.XAQuery", XAQueryEvents)
         self.query.ResFileName = self.RESFILE
         self.query.set_params(parent=self)
 
-        self.query_events = XAQueryEvents()
         self.result = []
 
     def Request(self):
@@ -93,8 +93,8 @@ class T1514(DataParent):
         self.query.SetFieldData(self.INBLOCK, "rate_gbn", 0, 비중구분)
         self.query.Request(0)
 
-        while self.query_events.상태 == False:
-            print(self.query_events.상태)
+        while XAQueryEvents.상태 == False:
+        #     print(self.query_events.상태)
             pythoncom.PumpWaitingMessages()
         
     def OnReceiveData(self,szTrCode):
@@ -131,7 +131,7 @@ class T1514(DataParent):
 
             self.result.append(lst)
 
-        self.query_events.상태 = False
+        XAQueryEvents.상태 = False
 
     def GetResult(self):
         columns = ['일자', '지수', '전일대비구분', '전일대비', '등락율', '거래량', '거래증가율', '거래대금1', '상승', '보합', '하락', '상승종목비율', '외인순매수',
