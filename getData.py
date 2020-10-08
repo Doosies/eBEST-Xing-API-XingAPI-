@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 def waiting():
     while XAQueryEvents.상태 == False:
         pythoncom.PumpWaitingMessages()
+    XAQueryEvents.상태 = False
 
 # 서버에서 해당 이벤트를 발생시키는 함수
 class XAQueryEvents:
@@ -133,7 +134,8 @@ class T1514(DataParent):
         
         # getData.XAQueryEvents.상태 = False
 
-    def GetResult(self):
+    def GetResult(self, 업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분):
+        self.Request(업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분)
         columns = ['일자', '지수', '전일대비구분', '전일대비', '등락율', '거래량', '거래증가율', '거래대금1', '상승', '보합', '하락', '상승종목비율', '외인순매수',
                    '시가', '고가', '저가', '거래대금2', '상한', '하한', '종목수', '기관순매수', '업종코드', '거래비중', '업종배당수익률']
 

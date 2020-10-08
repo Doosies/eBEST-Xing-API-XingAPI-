@@ -42,9 +42,9 @@ class XingAPI:
         :param 비중구분: 1:거래량비중, 2:거래대금비중
         """
         api = getData.T1514()
-        api.Request(업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분)
-        getData.XAQueryEvents.상태 = False
-        result = api.GetResult()
+        # api.Request(업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분)
+        # getData.XAQueryEvents.상태 = False
+        result = api.GetResult(업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분)
         return result
 
     def CSPAQ12200_예수금조회(self):
