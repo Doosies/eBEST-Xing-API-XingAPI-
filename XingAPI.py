@@ -78,7 +78,7 @@ if __name__ == "__main__":
     # test_data = api.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
     # print(test_data)
 
-    test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='2000', 연속조회 = True, cts_date='', cts_time='')
+    test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='60', 요청건수='2000', 연속조회 = True, cts_date='', cts_time='')
     test_data2.to_csv('output2.csv', index=False, mode='w',
            encoding='utf-8-sig')
 

@@ -3,6 +3,8 @@ import pythoncom
 # import sqlite3
 # import pandas as pd
 from pandas import DataFrame, Series, Panel
+# from pandas import DataFrame, Series, Panel
+from time import sleep
 # import matplotlib
 # import matplotlib.pyplot as plt
 
@@ -234,6 +236,7 @@ class T8412_주식차트N분(DataParent):
         elif 연속조회 == True:
 
             while self.CTS_DATE != '' and self.CTS_TIME != '':
+                sleep(1.0)
                 self.Request(0, 0, 0, self.CTS_DATE, self.CTS_TIME)
                 waiting()
 
