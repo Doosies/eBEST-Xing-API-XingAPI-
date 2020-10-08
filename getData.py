@@ -1,16 +1,10 @@
 import win32com.client
 import pythoncom
-import os
-import sys
-import inspect
-
 # import sqlite3
-
-import pandas as pd
-from pandas import DataFrame, Series, Panel
-
-import matplotlib
-import matplotlib.pyplot as plt
+# import pandas as pd
+# from pandas import DataFrame, Series, Panel
+# import matplotlib
+# import matplotlib.pyplot as plt
 
 def waiting():
     while XAQueryEvents.상태 == False:
@@ -37,12 +31,6 @@ class XAQueryEvents:
     def OnReceiveMessage(self, systemError, messageCode, message):
         # print("OnReceiveMessage : ", systemError, messageCode, message)
         pass
-
-
-# # 서버에서 데이터가 올 때 까지 대기하는 함수
-# def Waiting():
-#     while XAQueryEvents.waitReceive() == False:
-#         pythoncom.PumpWaitingMessages()
 
 # 다른 데이터를 받는 함수들에서 공통적으로 초기화 해줘야 할 부분을 추상클래스로 빼버림
 class DataParent:
@@ -188,6 +176,7 @@ class T8412_주식차트N분(DataParent):
         super().__init__('t8412')
 
     def Request(self, 단축코드, 단위, 요청건수, cts_date):
+        # 만약 최초 요청일경우
         if cts_date == '':
             self.query.SetFieldData(self.INBLOCK, "shcode", 0, 단축코드)
             self.query.SetFieldData(self.INBLOCK, "ncnt", 0, 단위)
@@ -198,6 +187,7 @@ class T8412_주식차트N분(DataParent):
             # self.query.SetFieldData(self.INBLOCK, "cts_time", 0, 연속시간)
             self.query.SetFieldData(self.INBLOCK, "comp_yn", 0, 'Y')
             self.query.Request(0)
+        # 2번째 이상의 요청일 경우
         else:
             self.SetFieldData(self.INBLOCK, "cts_date", 0, self.CTS_DATE)
             err_code = self.Request(True) # 연속조회인경우만 True
@@ -206,14 +196,13 @@ class T8412_주식차트N분(DataParent):
                 print("error... {0}".format(err_code))
 
 
-
         # Waiting()
 
     def OnReceiveData(self,szTrCode):
+        # 더 많은 결과값을 받아오기 위해 압축모듈을 사용하므로 압축해제를 받아온 블럭의 압축을 해제해줌
         nOrgSize = self.query.Decompress("t8412OutBlock1")
         if nOrgSize > 0:
             nCount = self.query.GetBlockCount(self.OUTBLOCK1)
-            print(nCount)
             for i in range(nCount):
                 날짜 = self.query.GetFieldData(self.OUTBLOCK1,"date",i).strip()
                 시간 = self.query.GetFieldData(self.OUTBLOCK1,"time",i).strip()
@@ -231,10 +220,10 @@ class T8412_주식차트N분(DataParent):
 
                 self.result.append(lst)
         self.CTS_DATE = self.query.GetFieldData(self.OUTBLOCK,"date",0).strip()
-        XAQueryEvents.상태 = False
 
     def GetResult(self, 단축코드, 단위, 요청건수, cts_date):
         self.Request(단축코드, 단위, 요청건수, cts_date)
         waiting()
+        print("ctsdata = " + self.CTS_DATE)
         columns = ["날짜","시간","시가","고가","저가","종가","거래량","거래대금","수정구분","수정비율","종가등락구분"]
         return DataFrame(data=self.result, columns=columns)
