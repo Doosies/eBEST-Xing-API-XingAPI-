@@ -12,17 +12,18 @@ from pandas import DataFrame, Series, Panel
 import matplotlib
 import matplotlib.pyplot as plt
 
-import XingAPI
+from XingAPI import XingAPI
 
-API = XingAPI.XingAPI()
-
+api = XingAPI()
 account_path = pd.read_csv('private\\info.csv')
-API.login(account_path)
+api.login(account_path)
+accounts = api.getAccount()
 
-week_data = API.t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='100', 비중구분='')
-week_data.to_csv('output.csv', index=False, mode='w',
-           encoding='utf-8-sig')
+week_data1 = api.t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
+print(week_data1)
 
-# accounts = API.getAccount()
-# test_data = API.CSPAQ12200_예수금상세현황요청_주문가능금액_총평가조회(레코드갯수='', 관리지점번호='', 계좌번호=accounts[0],비밀번호=2809,잔고생성구분=0)
-# print(test_data)
+test_data = api.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
+print(test_data)
+
+test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
+print(test_data2)

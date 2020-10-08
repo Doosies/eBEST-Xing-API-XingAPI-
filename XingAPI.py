@@ -65,25 +65,16 @@ class XingAPI:
         return result
 
 if __name__ == "__main__":
-    accountAPI = XingAPI()
+    api = XingAPI()
     account_path = pd.read_csv('private\\info.csv')
-    accountAPI.login(account_path)
-    accounts = accountAPI.getAccount()
+    api.login(account_path)
+    accounts = api.getAccount()
 
-    week_data1 = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
+    week_data1 = api.t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
     print(week_data1)
-    # week_data1.to_csv('output.csv', index=False, mode='w',encoding='utf-8-sig')
-    # week_data = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='100', 비중구분='')
-    # week_data.to_csv('C:\\Users\\SongMinhyung\\PycharmProjects\\pythonProject\\output.csv', index=False, mode='w',
-    #         encoding='utf-8-sig')
-    test_data = XingAPI().t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
+    
+    test_data = api.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
     print(test_data)
-    # test_data = API.CSPAQ12200_예수금상세현황요청_주문가능금액_총평가조회(레코드갯수='', 관리지점번호='', 계좌번호=accounts[0],비밀번호=0000,잔고생성구분=0)
-    # print(test_data)
 
-    # test_data = XingAPI().t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
-    # print(test_data)
-
-    # sleep(1.0)
-    test_data2 = XingAPI().t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
+    test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
     print(test_data2)
