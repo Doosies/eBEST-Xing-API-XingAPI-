@@ -13,21 +13,23 @@ import Account
 
 
 
-# stockAPI = getData
-loginAPI = Account.Account()
 
 class XingAPI:
+
+    def __init__(self):
+        # stockAPI = getData
+        self.loginAPI = Account.Account()
 
     def getAccount(self):
         return self.accounts
 
     def login(self, path):
-        loginAPI.Login(path)
-        self.accounts = loginAPI.getAccount()
+        self.loginAPI.Login(path)
+        self.accounts = self.loginAPI.getAccount()
         print(self.accounts)
 
     def logout(self):
-        loginAPI.Logout()
+        self.loginAPI.Logout()
 
 
     def t1514_업종기간별추이(self, 업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분):
@@ -41,6 +43,7 @@ class XingAPI:
         """
         api = getData.T1514()
         api.Request(업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분)
+        getData.XAQueryEvents.상태 = False
         result = api.GetResult()
         return result
 
@@ -59,12 +62,14 @@ class XingAPI:
         """
         api = getData.T0424_주식잔고2()
         api.Request(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
+        getData.XAQueryEvents.상태 = False
         result = api.GetResult()
         return result
 
     def t8412_주식차트N분(self, 단축코드, 분단위, 요청건수, cts_time):
         api = getData.T8412_주식차트N분()
         api.Request(단축코드, 분단위, 요청건수, cts_time)
+        getData.XAQueryEvents.상태 = False
         result = api.GetResult()
         return result
 
@@ -74,10 +79,12 @@ if __name__ == "__main__":
     accountAPI.login(account_path)
     accounts = accountAPI.getAccount()
 
-    week_data = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='1', 비중구분='')
-    print(week_data)
-    # week_data.to_csv('output.csv', index=False, mode='w',encoding='utf-8-sig')
-    # sleep(5.0)
+    week_data1 = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
+    print(week_data1)
+    # week_data1.to_csv('output.csv', index=False, mode='w',encoding='utf-8-sig')
+    sleep(1.0)
+    week_data2 = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='2', 비중구분='')
+    print(week_data2)
     # week_data = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='100', 비중구분='')
     # week_data.to_csv('C:\\Users\\SongMinhyung\\PycharmProjects\\pythonProject\\output.csv', index=False, mode='w',
     #         encoding='utf-8-sig')

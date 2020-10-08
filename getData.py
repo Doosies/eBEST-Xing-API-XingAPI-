@@ -12,6 +12,9 @@ from pandas import DataFrame, Series, Panel
 import matplotlib
 import matplotlib.pyplot as plt
 
+def waiting():
+    while XAQueryEvents.상태 == False:
+        pythoncom.PumpWaitingMessages()
 
 # 서버에서 해당 이벤트를 발생시키는 함수
 class XAQueryEvents:
@@ -92,11 +95,8 @@ class T1514(DataParent):
         self.query.SetFieldData(self.INBLOCK, "cnt", 0, 조회건수)
         self.query.SetFieldData(self.INBLOCK, "rate_gbn", 0, 비중구분)
         self.query.Request(0)
+        waiting()
 
-        while XAQueryEvents.상태 == False:
-        #     print(self.query_events.상태)
-            pythoncom.PumpWaitingMessages()
-        
     def OnReceiveData(self,szTrCode):
         nCount = self.query.GetBlockCount(self.OUTBLOCK1)
         for i in range(nCount):
@@ -130,8 +130,8 @@ class T1514(DataParent):
                    외인순매수, 시가, 고가, 저가, 거래대금2, 상한, 하한, 종목수, 기관순매수, 업종코드, 거래비중, 업종배당수익률]
 
             self.result.append(lst)
-
-        XAQueryEvents.상태 = False
+        
+        # getData.XAQueryEvents.상태 = False
 
     def GetResult(self):
         columns = ['일자', '지수', '전일대비구분', '전일대비', '등락율', '거래량', '거래증가율', '거래대금1', '상승', '보합', '하락', '상승종목비율', '외인순매수',
