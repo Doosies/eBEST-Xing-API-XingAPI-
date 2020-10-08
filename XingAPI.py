@@ -9,11 +9,6 @@ import pandas as pd
 import getData
 import Account
 
-
-
-
-
-
 class XingAPI:
 
     def __init__(self):
