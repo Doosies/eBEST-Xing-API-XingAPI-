@@ -1,18 +1,14 @@
-import pandas as pd
-from pandas import DataFrame, Series, Panel
-from time import sleep
-import matplotlib
-import matplotlib.pyplot as plt
-import win32com.client
-import pythoncom
 
+# from pandas import DataFrame, Series, Panel
+# from time import sleep
+# import matplotlib
+# import matplotlib.pyplot as plt
+# import win32com.client
+# import pythoncom
+from time import sleep
+import pandas as pd
 import getData
 import Account
-
-
-
-
-
 
 class XingAPI:
 
@@ -26,7 +22,7 @@ class XingAPI:
     def login(self, path):
         self.loginAPI.Login(path)
         self.accounts = self.loginAPI.getAccount()
-        print(self.accounts)
+        # print(self.accounts)
 
     def logout(self):
         self.loginAPI.Logout()
@@ -60,8 +56,14 @@ class XingAPI:
         result = getData.T0424_주식잔고2().GetResult(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
         return result
 
-    def t8412_주식차트N분(self, 단축코드, 분단위, 요청건수, cts_time):
-        result = getData.T8412_주식차트N분().GetResult(단축코드, 분단위, 요청건수, cts_time)
+    def t8412_주식차트N분(self, 단축코드, 분단위, 요청건수, 연속조회, cts_date, cts_time):
+        """주식잔고2 조회함수
+        :param 단축코드: 주식종목의 단축코드 입력
+        :param 분단위: 시간의 단위 입력 (1: 1분, 2: 2분, 3: 3분 ... n: n분)
+        :param 요청건수: 한번 블럭을 받아올 때 2000건까지 가능
+        :param cts_time: 최초 조회시 ''입력
+        """
+        result = getData.T8412_주식차트N분().GetResult(단축코드, 분단위, 요청건수, 연속조회, cts_date, cts_time)
         return result
 
 if __name__ == "__main__":
@@ -70,11 +72,18 @@ if __name__ == "__main__":
     api.login(account_path)
     accounts = api.getAccount()
 
-    week_data1 = api.t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
-    print(week_data1)
+    # week_data1 = api.t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
+    # print(week_data1)
     
-    test_data = api.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
-    print(test_data)
+    # test_data = api.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
+    # print(test_data)
 
-    test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
-    print(test_data2)
+    test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='2000', 연속조회 = True, cts_date='', cts_time='')
+    test_data2.to_csv('output2.csv', index=False, mode='w',
+           encoding='utf-8-sig')
+
+    # sleep(0.9)
+    # test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='2000',  연속조회 = False, cts_date='', cts_time='')
+    # test_data2.to_csv('output2.csv', index=False, mode='w',
+    #        encoding='utf-8-sig')
+    # print(test_data2)

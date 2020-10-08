@@ -1,18 +1,14 @@
-import win32com.client
-import pythoncom
-import os
-import sys
-import inspect
-
+# import win32com.client
+# import pythoncom
+# import os
+# import sys
+# import inspect
 # import sqlite3
-
-import pandas as pd
-from pandas import DataFrame, Series, Panel
-
-import matplotlib
-import matplotlib.pyplot as plt
-
+# from pandas import DataFrame, Series, Panel
+# import matplotlib
+# import matplotlib.pyplot as plt
 from XingAPI import XingAPI
+import pandas as pd
 
 api = XingAPI()
 account_path = pd.read_csv('private\\info.csv')
