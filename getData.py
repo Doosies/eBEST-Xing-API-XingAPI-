@@ -270,12 +270,15 @@ class T8436_주식종목조회(DataParent):
             증권그룹 = self.query.GetFieldData(self.OUTBLOCK,"bu12gubun",i).strip()
             기업인수목적회사여부= self.query.GetFieldData(self.OUTBLOCK,"spac_gubun",i).strip()
 
-            lst = [종목명,단축코드,확장코드,ETF구분,상한가,하한가,전일가,주문수량단위,기준가,구분,증권그룹,기업인수목적회사여부]
+            # lst = [종목명,단축코드,확장코드,ETF구분,상한가,하한가,전일가,주문수량단위,기준가,구분,증권그룹,기업인수목적회사여부]
+            lst = [종목명, 단축코드, 상한가, 하한가, 전일가, 기준가]
 
-            self.result.append(lst)
+            if ETF구분 == '0' and 기업인수목적회사여부 == 'N':
+                self.result.append(lst)
 
     def GetResult(self, 구분):
         self.Request(구분)
         waiting()
-        columns = ["종목명","단축코드","확장코드","ETF구분","상한가","하한가","전일가","주문수량단위","기준가","구분","증권그룹","기업인수목적회사여부"]
-        return DataFrame(data=self.result, columns=columns)
+        # columns = ["종목명","단축코드","확장코드","ETF구분","상한가","하한가","전일가","주문수량단위","기준가","구분","증권그룹","기업인수목적회사여부"]
+        colums = ["종목명", "단축코드", "상한가", "하한가", "전일가", "기준가"]
+        return DataFrame(data=self.result, columns=colums)
