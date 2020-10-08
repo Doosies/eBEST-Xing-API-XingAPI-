@@ -57,10 +57,10 @@ class XingAPI:
         :param 제비용포함여부: 0:제비용미포함, 1:제비용포함
         :param CTS_종목번호: 처음조회시는 공백, 연속조회시는 이전 cts_expcode값으로 설정
         """
-        api = getData.T0424_주식잔고2()
-        api.Request(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
-        getData.XAQueryEvents.상태 = False
-        result = api.GetResult()
+        result = getData.T0424_주식잔고2().GetResult(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
+        # api.Request()
+        # getData.XAQueryEvents.상태 = False
+        # result = api.
         return result
 
     def t8412_주식차트N분(self, 단축코드, 분단위, 요청건수, cts_time):

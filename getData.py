@@ -96,7 +96,6 @@ class T1514(DataParent):
         self.query.SetFieldData(self.INBLOCK, "cnt", 0, 조회건수)
         self.query.SetFieldData(self.INBLOCK, "rate_gbn", 0, 비중구분)
         self.query.Request(0)
-        waiting()
 
     def OnReceiveData(self,szTrCode):
         nCount = self.query.GetBlockCount(self.OUTBLOCK1)
@@ -136,6 +135,7 @@ class T1514(DataParent):
 
     def GetResult(self, 업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분):
         self.Request(업종코드, 구분1, 구분2, CTS일자, 조회건수, 비중구분)
+        waiting()
         columns = ['일자', '지수', '전일대비구분', '전일대비', '등락율', '거래량', '거래증가율', '거래대금1', '상승', '보합', '하락', '상승종목비율', '외인순매수',
                    '시가', '고가', '저가', '거래대금2', '상한', '하한', '종목수', '기관순매수', '업종코드', '거래비중', '업종배당수익률']
 
@@ -157,7 +157,7 @@ class T0424_주식잔고2(DataParent):
         self.query.SetFieldData(self.INBLOCK, "charge", 0, 제비용포함여부)
         self.query.SetFieldData(self.INBLOCK, "cts_expcode", 0, CTS_종목번호)
         self.query.Request(0)
-        Waiting()
+        # Waiting()
 
     def OnReceiveData(self,szTrCode):
         
@@ -178,7 +178,9 @@ class T0424_주식잔고2(DataParent):
 
         XAQueryEvents.상태 = False
 
-    def GetResult(self):
+    def GetResult(self, 계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호):
+        self.Request(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
+        waiting()
         columns = ["추정순자산","실현손익","매입금액","추정D2예수금","CTS_종목번호","평가금액","평가손익"]
         return DataFrame(data=self.result, columns=columns)
 
