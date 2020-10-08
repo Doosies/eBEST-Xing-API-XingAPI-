@@ -66,6 +66,14 @@ class XingAPI:
         result = getData.T8412_주식차트N분().GetResult(단축코드, 분단위, 요청건수, 연속조회, cts_date, cts_time)
         return result
 
+    def t8436_주식종목조회(self, 구분):
+        """주식잔고2 조회함수
+        :param 구분: 0: 전체, 1: 코스피, 2: 코스닥
+        """
+        result = getData.T8436_주식종목조회().GetResult(구분)
+        return result
+    
+
 if __name__ == "__main__":
     api = XingAPI()
     account_path = pd.read_csv('private\\info.csv')

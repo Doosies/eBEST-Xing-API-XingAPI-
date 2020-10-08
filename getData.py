@@ -257,25 +257,25 @@ class T8436_주식종목조회(DataParent):
     def OnReceiveData(self,szTrCode):
         nCount = self.query.GetBlockCount(self.OUTBLOCK)
         for i in range(nCount):
-            종목명 = self.query.GetFieldData(self.OUTBLOCK1,"hname",i).strip()
-            단축코드 = self.query.GetFieldData(self.OUTBLOCK1,"shcode",i).strip()
-            확장코드 = self.query.GetFieldData(self.OUTBLOCK1,"expcode",i).strip()
-            ETF구분= self.query.GetFieldData(self.OUTBLOCK1,"etfgubun",i).strip()
-            상한가 = self.query.GetFieldData(self.OUTBLOCK1,"uplmtprice",i).strip()
-            하한가 = self.query.GetFieldData(self.OUTBLOCK1,"dnlmtprice",i).strip()
-            전일가 = self.query.GetFieldData(self.OUTBLOCK1,"jnilclose",i).strip()
-            주문수량단위 = self.query.GetFieldData(self.OUTBLOCK1,"memedan",i).strip()
-            기준가 = self.query.GetFieldData(self.OUTBLOCK1,"recprice",i).strip()
-            구분= self.query.GetFieldData(self.OUTBLOCK1,"gubun",i).strip()
-            증권그룹 = self.query.GetFieldData(self.OUTBLOCK1,"bu12gubun",i).strip()
-            기업인수목적회사여부= self.query.GetFieldData(self.OUTBLOCK1,"spac_gubun",i).strip()
+            종목명 = self.query.GetFieldData(self.OUTBLOCK,"hname",i).strip()
+            단축코드 = self.query.GetFieldData(self.OUTBLOCK,"shcode",i).strip()
+            확장코드 = self.query.GetFieldData(self.OUTBLOCK,"expcode",i).strip()
+            ETF구분= self.query.GetFieldData(self.OUTBLOCK,"etfgubun",i).strip()
+            상한가 = self.query.GetFieldData(self.OUTBLOCK,"uplmtprice",i).strip()
+            하한가 = self.query.GetFieldData(self.OUTBLOCK,"dnlmtprice",i).strip()
+            전일가 = self.query.GetFieldData(self.OUTBLOCK,"jnilclose",i).strip()
+            주문수량단위 = self.query.GetFieldData(self.OUTBLOCK,"memedan",i).strip()
+            기준가 = self.query.GetFieldData(self.OUTBLOCK,"recprice",i).strip()
+            구분= self.query.GetFieldData(self.OUTBLOCK,"gubun",i).strip()
+            증권그룹 = self.query.GetFieldData(self.OUTBLOCK,"bu12gubun",i).strip()
+            기업인수목적회사여부= self.query.GetFieldData(self.OUTBLOCK,"spac_gubun",i).strip()
 
             lst = [종목명,단축코드,확장코드,ETF구분,상한가,하한가,전일가,주문수량단위,기준가,구분,증권그룹,기업인수목적회사여부]
 
             self.result.append(lst)
 
-    def GetResult(self, 계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호):
-        self.Request(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
+    def GetResult(self, 구분):
+        self.Request(구분)
         waiting()
         columns = ["종목명","단축코드","확장코드","ETF구분","상한가","하한가","전일가","주문수량단위","기준가","구분","증권그룹","기업인수목적회사여부"]
         return DataFrame(data=self.result, columns=columns)
