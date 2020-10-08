@@ -21,7 +21,8 @@ accounts = api.getAccount()
 # test_data = api.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
 # print(test_data)
 
-# test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
+test_data2 = api.t8412_주식차트N분(단축코드='005930', 분단위='1', 요청건수='2000',연속조회=True, cts_time='', cts_date='')
+test_data2.to_csv('Stock.csv', index=False, mode='w',encoding='utf-8-sig')
 # print(test_data2)
 
 # data = api.t8436_주식종목조회(구분='0')

@@ -236,7 +236,7 @@ class T8412_주식차트N분(DataParent):
         elif 연속조회 == True:
 
             while self.CTS_DATE != '' and self.CTS_TIME != '':
-                sleep(1.0)
+                sleep(0.5)
                 self.Request(0, 0, 0, self.CTS_DATE, self.CTS_TIME)
                 waiting()
 
@@ -259,6 +259,8 @@ class T8436_주식종목조회(DataParent):
         for i in range(nCount):
             종목명 = self.query.GetFieldData(self.OUTBLOCK,"hname",i).strip()
             단축코드 = self.query.GetFieldData(self.OUTBLOCK,"shcode",i).strip()
+            if len(단축코드) < 6:
+                print(단축코드)
             확장코드 = self.query.GetFieldData(self.OUTBLOCK,"expcode",i).strip()
             ETF구분= self.query.GetFieldData(self.OUTBLOCK,"etfgubun",i).strip()
             상한가 = self.query.GetFieldData(self.OUTBLOCK,"uplmtprice",i).strip()
