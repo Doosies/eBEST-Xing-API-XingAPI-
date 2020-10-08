@@ -160,9 +160,7 @@ class T0424_주식잔고2(DataParent):
         # Waiting()
 
     def OnReceiveData(self,szTrCode):
-        
         nCount = self.query.GetBlockCount(self.OUTBLOCK)
-        print(nCount)
         for i in range(nCount):
             추정순자산 = self.query.GetFieldData(self.OUTBLOCK,"sunamt",i).strip()
             실현손익 = self.query.GetFieldData(self.OUTBLOCK,"dtsunik",i).strip()
@@ -175,8 +173,6 @@ class T0424_주식잔고2(DataParent):
             lst = [추정순자산,실현손익,매입금액,추정D2예수금,CTS_종목번호,평가금액,평가손익]
 
             self.result.append(lst)
-
-        XAQueryEvents.상태 = False
 
     def GetResult(self, 계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호):
         self.Request(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
@@ -237,6 +233,8 @@ class T8412_주식차트N분(DataParent):
         self.CTS_DATE = self.query.GetFieldData(self.OUTBLOCK,"date",0).strip()
         XAQueryEvents.상태 = False
 
-    def GetResult(self):
+    def GetResult(self, 단축코드, 단위, 요청건수, cts_date):
+        self.Request(단축코드, 단위, 요청건수, cts_date)
+        waiting()
         columns = ["날짜","시간","시가","고가","저가","종가","거래량","거래대금","수정구분","수정비율","종가등락구분"]
         return DataFrame(data=self.result, columns=columns)

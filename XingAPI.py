@@ -58,16 +58,10 @@ class XingAPI:
         :param CTS_종목번호: 처음조회시는 공백, 연속조회시는 이전 cts_expcode값으로 설정
         """
         result = getData.T0424_주식잔고2().GetResult(계좌번호, 비밀번호, 단가구분, 체결구분, 단일가구분, 제비용포함여부, CTS_종목번호)
-        # api.Request()
-        # getData.XAQueryEvents.상태 = False
-        # result = api.
         return result
 
     def t8412_주식차트N분(self, 단축코드, 분단위, 요청건수, cts_time):
-        api = getData.T8412_주식차트N분()
-        api.Request(단축코드, 분단위, 요청건수, cts_time)
-        getData.XAQueryEvents.상태 = False
-        result = api.GetResult()
+        result = getData.T8412_주식차트N분().GetResult(단축코드, 분단위, 요청건수, cts_time)
         return result
 
 if __name__ == "__main__":
@@ -79,14 +73,11 @@ if __name__ == "__main__":
     week_data1 = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='10', 비중구분='')
     print(week_data1)
     # week_data1.to_csv('output.csv', index=False, mode='w',encoding='utf-8-sig')
-    sleep(1.0)
-    week_data2 = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='2', 비중구분='')
-    print(week_data2)
     # week_data = XingAPI().t1514_업종기간별추이(업종코드='001', 구분1='', 구분2='1', CTS일자='', 조회건수='100', 비중구분='')
     # week_data.to_csv('C:\\Users\\SongMinhyung\\PycharmProjects\\pythonProject\\output.csv', index=False, mode='w',
     #         encoding='utf-8-sig')
-    # test_data = API.t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
-    # print(test_data)
+    test_data = XingAPI().t0424_주식잔고2(accounts[0], 0000, 1, 0, 0, 0, '')
+    print(test_data)
     # test_data = API.CSPAQ12200_예수금상세현황요청_주문가능금액_총평가조회(레코드갯수='', 관리지점번호='', 계좌번호=accounts[0],비밀번호=0000,잔고생성구분=0)
     # print(test_data)
 
@@ -94,5 +85,5 @@ if __name__ == "__main__":
     # print(test_data)
 
     # sleep(1.0)
-    # test_data2 = XingAPI().t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
-    # print(test_data2)
+    test_data2 = XingAPI().t8412_주식차트N분(단축코드='005930', 분단위='5', 요청건수='10', cts_time='')
+    print(test_data2)
