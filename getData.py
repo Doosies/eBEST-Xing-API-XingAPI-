@@ -2,7 +2,7 @@ import win32com.client
 import pythoncom
 # import sqlite3
 # import pandas as pd
-# from pandas import DataFrame, Series, Panel
+from pandas import DataFrame, Series, Panel
 # import matplotlib
 # import matplotlib.pyplot as plt
 
@@ -175,9 +175,9 @@ class T8412_주식차트N분(DataParent):
     def __init__(self): 
         super().__init__('t8412')
 
-    def Request(self, 단축코드, 단위, 요청건수, cts_date):
-        # 만약 최초 요청일경우
-        if cts_date == '':
+    def Request(self, 단축코드, 단위, 요청건수, cts_date, cts_time):
+        # 처음 조회를 요청 했을 때
+        if cts_date == '' and cts_time == '':
             self.query.SetFieldData(self.INBLOCK, "shcode", 0, 단축코드)
             self.query.SetFieldData(self.INBLOCK, "ncnt", 0, 단위)
             self.query.SetFieldData(self.INBLOCK, "qrycnt", 0, 요청건수)
@@ -189,17 +189,17 @@ class T8412_주식차트N분(DataParent):
             self.query.Request(0)
         # 2번째 이상의 요청일 경우
         else:
-            self.SetFieldData(self.INBLOCK, "cts_date", 0, self.CTS_DATE)
-            err_code = self.Request(True) # 연속조회인경우만 True
+            self.query.SetFieldData(self.INBLOCK, "cts_date", 0, self.CTS_DATE)
+            self.query.SetFieldData(self.INBLOCK, "cts_time", 0, self.CTS_TIME)
+            err_code = self.query.Request(True) # 연속조회인경우만 True
 
             if err_code < 0:
                 print("error... {0}".format(err_code))
 
 
-        # Waiting()
-
     def OnReceiveData(self,szTrCode):
         # 더 많은 결과값을 받아오기 위해 압축모듈을 사용하므로 압축해제를 받아온 블럭의 압축을 해제해줌
+        # self.query.Decompress("t8412OutBlock")
         nOrgSize = self.query.Decompress("t8412OutBlock1")
         if nOrgSize > 0:
             nCount = self.query.GetBlockCount(self.OUTBLOCK1)
@@ -219,11 +219,23 @@ class T8412_주식차트N분(DataParent):
                 lst = [날짜,시간,시가,고가,저가,종가,거래량,거래대금,수정구분,수정비율,종가등락구분]
 
                 self.result.append(lst)
-        self.CTS_DATE = self.query.GetFieldData(self.OUTBLOCK,"date",0).strip()
+        self.CTS_DATE = self.query.GetFieldData(self.OUTBLOCK,"cts_date",0).strip()
+        self.CTS_TIME = self.query.GetFieldData(self.OUTBLOCK,"cts_time",0).strip()
+        print("cts date %s, cts time %s" % (self.CTS_DATE,self.CTS_TIME))
 
-    def GetResult(self, 단축코드, 단위, 요청건수, cts_date):
-        self.Request(단축코드, 단위, 요청건수, cts_date)
+    def GetResult(self, 단축코드, 단위, 요청건수, 연속조회, cts_date, cts_time):
+        self.Request(단축코드, 단위, 요청건수, cts_date, cts_time)
         waiting()
-        print("ctsdata = " + self.CTS_DATE)
         columns = ["날짜","시간","시가","고가","저가","종가","거래량","거래대금","수정구분","수정비율","종가등락구분"]
+
+        if 연속조회 == False:
+            return DataFrame(data=self.result, columns=columns)
+        
+        elif 연속조회 == True:
+
+            while self.CTS_DATE != '' and self.CTS_TIME != '':
+                self.Request(0, 0, 0, self.CTS_DATE, self.CTS_TIME)
+                waiting()
+
         return DataFrame(data=self.result, columns=columns)
+            # columns = ["날짜","시간","시가","고가","저가","종가","거래량","거래대금","수정구분","수정비율","종가등락구분"]
