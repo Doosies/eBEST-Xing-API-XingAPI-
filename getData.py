@@ -242,3 +242,40 @@ class T8412_주식차트N분(DataParent):
 
         return DataFrame(data=self.result, columns=columns)
             # columns = ["날짜","시간","시가","고가","저가","종가","거래량","거래대금","수정구분","수정비율","종가등락구분"]
+
+class T8436_주식종목조회(DataParent):
+    '''
+    주식종목죠회
+    '''
+    def __init__(self): 
+        super().__init__('t8436')
+
+    def Request(self, 구분):
+        self.query.SetFieldData(self.INBLOCK, "gubun", 0, 구분)
+        self.query.Request(0)
+
+    def OnReceiveData(self,szTrCode):
+        nCount = self.query.GetBlockCount(self.OUTBLOCK)
+        for i in range(nCount):
+            종목명 = self.query.GetFieldData(self.OUTBLOCK,"hname",i).strip()
+            단축코드 = self.query.GetFieldData(self.OUTBLOCK,"shcode",i).strip()
+            확장코드 = self.query.GetFieldData(self.OUTBLOCK,"expcode",i).strip()
+            ETF구분= self.query.GetFieldData(self.OUTBLOCK,"etfgubun",i).strip()
+            상한가 = self.query.GetFieldData(self.OUTBLOCK,"uplmtprice",i).strip()
+            하한가 = self.query.GetFieldData(self.OUTBLOCK,"dnlmtprice",i).strip()
+            전일가 = self.query.GetFieldData(self.OUTBLOCK,"jnilclose",i).strip()
+            주문수량단위 = self.query.GetFieldData(self.OUTBLOCK,"memedan",i).strip()
+            기준가 = self.query.GetFieldData(self.OUTBLOCK,"recprice",i).strip()
+            구분= self.query.GetFieldData(self.OUTBLOCK,"gubun",i).strip()
+            증권그룹 = self.query.GetFieldData(self.OUTBLOCK,"bu12gubun",i).strip()
+            기업인수목적회사여부= self.query.GetFieldData(self.OUTBLOCK,"spac_gubun",i).strip()
+
+            lst = [종목명,단축코드,확장코드,ETF구분,상한가,하한가,전일가,주문수량단위,기준가,구분,증권그룹,기업인수목적회사여부]
+
+            self.result.append(lst)
+
+    def GetResult(self, 구분):
+        self.Request(구분)
+        waiting()
+        columns = ["종목명","단축코드","확장코드","ETF구분","상한가","하한가","전일가","주문수량단위","기준가","구분","증권그룹","기업인수목적회사여부"]
+        return DataFrame(data=self.result, columns=columns)
